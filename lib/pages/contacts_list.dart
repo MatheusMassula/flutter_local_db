@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_db/pages/contact_form.dart';
+import 'package:flutter_local_db/pages/widgets/contact_tile.dart';
 
 class ContactList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => ContactForm())
+          );
+        },
         child: Icon(Icons.add),
       ),
       appBar: AppBar(
@@ -13,18 +19,7 @@ class ContactList extends StatelessWidget {
       ),
       body: ListView(
         children: List.generate(20, (index) => 
-          Card(
-            child: ListTile(
-              title: Text(
-                'Name $index',
-                style: TextStyle(fontSize: 24),
-              ),
-              subtitle: Text(
-                '${index + 1000}',
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-          )
+          ContactTile(name: 'Name $index', account: index,)
         ),
       ),
     );
