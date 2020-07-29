@@ -8,9 +8,13 @@ class ContactList extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => ContactForm())
-          );
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                builder: (context) => ContactForm(),
+              ))
+              .then(
+                (value) => print(value),
+              );
         },
         child: Icon(Icons.add),
       ),
@@ -18,8 +22,12 @@ class ContactList extends StatelessWidget {
         title: Text('Contacts'),
       ),
       body: ListView(
-        children: List.generate(20, (index) => 
-          ContactTile(name: 'Name $index', account: index,)
+        children: List.generate(
+          20,
+          (index) => ContactTile(
+            name: 'Name $index',
+            account: index,
+          ),
         ),
       ),
     );
