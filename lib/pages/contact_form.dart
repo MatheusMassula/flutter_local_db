@@ -67,6 +67,7 @@ class _ContactFormState extends State<ContactForm> {
   void _validateForm() {
     if(_formKey.currentState.validate()) {
       Contact newContact = Contact(
+        0,
         _nameController.text,
         int.tryParse(_accountController.text),
       );

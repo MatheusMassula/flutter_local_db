@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_db/models/contact.dart';
 
 class ContactTile extends StatelessWidget {
-  final String name;
-  final int account;
+  final Contact contact;
 
   ContactTile({
-    @required this.name,
-    @required this.account,
+    @required this.contact,
   });
 
   @override
@@ -14,11 +13,11 @@ class ContactTile extends StatelessWidget {
     return Card(
       child: ListTile(
         title: Text(
-          '$name',
+          '${contact.name}',
           style: TextStyle(fontSize: 24),
         ),
         subtitle: Text(
-          '$account',
+          '${contact.account}',
           style: TextStyle(fontSize: 16),
         ),
       ),
