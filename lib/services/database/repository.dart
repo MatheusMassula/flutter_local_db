@@ -17,22 +17,22 @@ Future<Database> getDatabase() async {
 
 Future<int> insertContact({@required Contact contact}) {
   return getDatabase().then((db) {
+    print(contact.toJsonWithoutId());
     return db.insert('contact', contact.toJsonWithoutId());
   });
 }
 
 Future<List<Contact>> getContactList() {
   return getDatabase().then((db) {
-    return db.query('SLECT * FROM contact').then(
+    return db.query('contact').then(
       (contactList) {
         List<Contact> result = List();
 
-        contactList.map(
-          (contact) {
-            result.add(Contact.fromJson(contact));
-          }
-        );
+        for (var contact in contactList) {
+          result.add(Contact.fromJson(contact));
+        }
 
+        print('result: $result');
         return result;
       }
     );

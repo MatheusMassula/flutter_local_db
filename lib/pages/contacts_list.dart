@@ -4,36 +4,57 @@ import 'package:flutter_local_db/pages/contact_form.dart';
 import 'package:flutter_local_db/pages/widgets/contact_tile.dart';
 import 'package:flutter_local_db/services/database/repository.dart';
 
-class ContactList extends StatefulWidget {
-  @override
-  _ContactListState createState() => _ContactListState();
-}
-
-class _ContactListState extends State<ContactList> {
-
-  final contactList = List<Contact>();
-
+class ContactList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('build contact list');
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _addContact(),
+        onPressed: () => _addContact(context),
         child: Icon(Icons.add),
       ),
       appBar: AppBar(
         title: Text('Contacts'),
       ),
-      body: ListView.builder(
-        itemCount: contactList.length,
-        itemBuilder: (context, index) {
-          return ContactTile(contact: contactList[index],);
-        }
-      ),
+      body: FutureBuilder(
+        initialData: List(),
+        future: getContactList(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+              final List<Contact> contactList = snapshot.data;
+
+              return ListView.builder(
+                itemCount: contactList.length,
+                itemBuilder: (context, index) {
+                  return ContactTile(contact: contactList[index],);
+                }
+              );
+              break;
+
+            case ConnectionState.waiting:
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Text('Loading...')
+                  ],
+                ),
+              );
+              break;
+
+            default:
+              return Center(child: CircularProgressIndicator());
+          }
+        },
+      )
     );
   }
 
-  void _addContact() {
+  void _addContact(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => ContactForm(),
     )).then((contact) {
@@ -41,5 +62,5 @@ class _ContactListState extends State<ContactList> {
         insertContact(contact: contact);
       }
     });
-  }
+  } 
 }
