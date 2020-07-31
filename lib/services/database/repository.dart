@@ -4,10 +4,9 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 Future<Database> getDatabase() async {
-  String databasePath = await getDatabasesPath();
-  
+  final String dbPath = join(await getDatabasesPath(), 'bytebank.db');
   return openDatabase(
-    join(databasePath, 'bytebank.db'),
+    dbPath,
     version: 1,
     onCreate: (db, version) {
       db.execute('CREATE TABLE contact(id INTEGER PRIMARY KEY, name TEXT, account INTEGER)');
@@ -16,25 +15,18 @@ Future<Database> getDatabase() async {
   );
 }
 
-
-Future<int> insertContact({@required Contact contact}) {
-  return getDatabase().then((db) {
-    return db.insert('contact', contact.toJsonWithoutId());
-  });
+Future<int> insertContact({@required Contact contact}) async {
+  final Database db = await getDatabase();
+  return db.insert('contact', contact.toJsonWithoutId());
 }
 
-Future<List<Contact>> getContactList() {
-  return getDatabase().then((db) {
-    return db.query('contact').then(
-      (contactList) {
-        List<Contact> result = List();
+Future<List<Contact>> getContactList() async {
+  final Database db = await getDatabase();
+  final List<Map<String, dynamic>> contactList = await db.query('contact');
 
-        for (var contact in contactList) {
-          result.add(Contact.fromJson(contact));
-        }
-
-        return result;
-      }
-    );
-  });
+  List<Contact> result = List();
+  for (var contact in contactList) {
+    result.add(Contact.fromJson(contact));
+  }
+  return result;
 }
