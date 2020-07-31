@@ -12,12 +12,13 @@ Future<Database> getDatabase() async {
     onCreate: (db, version) {
       db.execute('CREATE TABLE contact(id INTEGER PRIMARY KEY, name TEXT, account INTEGER)');
     },
+    onDowngrade: onDatabaseDowngradeDelete
   );
 }
 
+
 Future<int> insertContact({@required Contact contact}) {
   return getDatabase().then((db) {
-    print(contact.toJsonWithoutId());
     return db.insert('contact', contact.toJsonWithoutId());
   });
 }
@@ -32,7 +33,6 @@ Future<List<Contact>> getContactList() {
           result.add(Contact.fromJson(contact));
         }
 
-        print('result: $result');
         return result;
       }
     );

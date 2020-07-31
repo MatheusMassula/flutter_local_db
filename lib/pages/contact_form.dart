@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_db/models/contact.dart';
+import 'package:flutter_local_db/services/database/repository.dart';
 
 class ContactForm extends StatefulWidget {
   @override
@@ -72,7 +73,7 @@ class _ContactFormState extends State<ContactForm> {
         int.tryParse(_accountController.text),
       );
 
-      Navigator.of(context).pop(newContact);
+      insertContact(contact: newContact).then((id) => Navigator.pop(context));
     }
   }
 }
