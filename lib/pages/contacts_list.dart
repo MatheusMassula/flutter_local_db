@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_db/models/contact.dart';
 import 'package:flutter_local_db/pages/contact_form.dart';
 import 'package:flutter_local_db/pages/widgets/contact_tile.dart';
-import 'package:flutter_local_db/services/database/repository.dart';
+import 'package:flutter_local_db/services/database/dao/contact_dao.dart';
 
 class ContactList extends StatefulWidget {
   @override
@@ -10,6 +10,8 @@ class ContactList extends StatefulWidget {
 }
 
 class _ContactListState extends State<ContactList> {
+  final ContactDao _contactDao = ContactDao();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +24,7 @@ class _ContactListState extends State<ContactList> {
         ),
         body: FutureBuilder(
           initialData: List(),
-          future: getContactList(),
+          future: _contactDao.getAll(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.done:

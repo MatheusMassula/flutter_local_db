@@ -11,7 +11,6 @@ class Contact {
       account = json['account'];
 
   Map<String, dynamic> toJsonWithoutId() => {
-    // 'id': id,
     'name': name,
     'account': account,
   };

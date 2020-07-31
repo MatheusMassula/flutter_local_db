@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_db/models/contact.dart';
-import 'package:flutter_local_db/services/database/repository.dart';
+import 'package:flutter_local_db/services/database/dao/contact_dao.dart';
 
 class ContactForm extends StatefulWidget {
   @override
@@ -11,6 +11,7 @@ class _ContactFormState extends State<ContactForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _accountController = TextEditingController();
+  final ContactDao _contactDao = ContactDao();
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +74,7 @@ class _ContactFormState extends State<ContactForm> {
         int.tryParse(_accountController.text),
       );
 
-      insertContact(contact: newContact).then((id) => Navigator.pop(context));
+      _contactDao.insert(contact: newContact).then((id) => Navigator.pop(context));
     }
   }
 }
