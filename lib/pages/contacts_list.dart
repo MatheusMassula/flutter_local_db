@@ -4,7 +4,12 @@ import 'package:flutter_local_db/pages/contact_form.dart';
 import 'package:flutter_local_db/pages/widgets/contact_tile.dart';
 import 'package:flutter_local_db/services/database/repository.dart';
 
-class ContactList extends StatelessWidget {
+class ContactList extends StatefulWidget {
+  @override
+  _ContactListState createState() => _ContactListState();
+}
+
+class _ContactListState extends State<ContactList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,6 +74,12 @@ class ContactList extends StatelessWidget {
   void _addContact(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => ContactForm())
+    ).then(
+      (value) {
+        setState(() {
+          
+        });
+      }
     );
   } 
 }
