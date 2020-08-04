@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'pages/dashboard.dart';
+import 'services/http/web_client.dart';
 
 void main() {
   runApp(ByteBankApp());
@@ -9,6 +10,7 @@ void main() {
 class ByteBankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    getAllTransactions();
     return MaterialApp(
       theme: ThemeData(
         primaryColor: Colors.green[900],
