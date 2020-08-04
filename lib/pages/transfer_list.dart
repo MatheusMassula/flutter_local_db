@@ -4,12 +4,12 @@ import 'package:flutter_local_db/pages/contact_form.dart';
 import 'package:flutter_local_db/pages/widgets/contact_tile.dart';
 import 'package:flutter_local_db/services/database/dao/contact_dao.dart';
 
-class ContactList extends StatefulWidget {
+class TransferList extends StatefulWidget {
   @override
-  _ContactListState createState() => _ContactListState();
+  _TransferListState createState() => _TransferListState();
 }
 
-class _ContactListState extends State<ContactList> {
+class _TransferListState extends State<TransferList> {
   final ContactDao _contactDao = ContactDao();
 
   @override
@@ -20,7 +20,7 @@ class _ContactListState extends State<ContactList> {
           child: Icon(Icons.add),
         ),
         appBar: AppBar(
-          title: Text('Contacts'),
+          title: Text('Transfer'),
         ),
         body: FutureBuilder(
           initialData: List(),

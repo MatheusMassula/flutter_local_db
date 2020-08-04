@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_db/pages/contacts_list.dart';
+import 'package:flutter_local_db/pages/transactions_list.dart';
+import 'package:flutter_local_db/pages/transfer_list.dart';
+
+import 'widgets/dashboard_card.dart';
 
 class Dashboard extends StatelessWidget {
   @override
@@ -16,44 +19,28 @@ class Dashboard extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Image.asset('assets/images/bytebank_logo.png'),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Material(
-              color: Theme.of(context).primaryColor,
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ContactList(),
-                  ));
-                },
-                child: Container(
-                  height: 100,
-                  width: 150,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.people,
-                          color: Colors.white,
-                          size: 32,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Contacts',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ),
-                    ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: <Widget>[
+                DashboardCard(
+                  title: 'Transfer',
+                  icon: Icons.monetization_on,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => TransferList())
                   ),
                 ),
-              ),
+
+                DashboardCard(
+                  title: 'Transactions',
+                  icon: Icons.description,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => TransactionsList())
+                  ),
+                ),
+              ],
             ),
-          )
+          ),
         ],
       ),
     );
