@@ -1,6 +1,10 @@
 import 'package:flutter_local_db/models/transaction.dart';
 import 'package:flutter_local_db/models/contact.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_db/services/http/web_client.dart';
+
+import 'widgets/progress_indicator_widget.dart';
+import 'widgets/transaction_tile.dart';
 
 class TransactionsList extends StatelessWidget {
   final List<Transaction> transactions = List();
@@ -22,30 +26,37 @@ class TransactionsList extends StatelessWidget {
       appBar: AppBar(
         title: Text('Transactions'),
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          final Transaction transaction = transactions[index];
-          return Card(
-            child: ListTile(
-              leading: Icon(Icons.monetization_on),
-              title: Text(
-                transaction.value.toString(),
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Text(
-                '${transaction.contact.account}',
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-            ),
-          );
-        },
-        itemCount: transactions.length,
-      ),
+      body: FutureBuilder<List<Transaction>>(
+        future: getAllTransactions(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  return TransactionTile(transaction: snapshot.data[index]);
+                },
+              );
+              break;
+
+            case ConnectionState.none:
+              return Container();
+              break;
+
+            case ConnectionState.waiting:
+              return ProgressIndicatorWidget();
+              break;
+
+            case ConnectionState.active:
+              return Container();
+              break;
+            
+            default:
+              return Container();
+              break;
+          }
+        }
+      )
     );
   }
 }

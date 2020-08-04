@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_local_db/models/contact.dart';
-import 'package:flutter_local_db/pages/contact_form.dart';
-import 'package:flutter_local_db/pages/widgets/contact_tile.dart';
 import 'package:flutter_local_db/services/database/dao/contact_dao.dart';
+import 'package:flutter_local_db/pages/widgets/contact_tile.dart';
+import 'package:flutter_local_db/pages/contact_form.dart';
+import 'package:flutter_local_db/models/contact.dart';
+import 'widgets/progress_indicator_widget.dart';
+import 'package:flutter/material.dart';
 
 class TransferList extends StatefulWidget {
   @override
@@ -33,7 +34,7 @@ class _TransferListState extends State<TransferList> {
                 break;
 
               case ConnectionState.waiting:
-                return _buildLoading();
+                return ProgressIndicatorWidget();
                 break;
 
               case ConnectionState.none:
@@ -59,17 +60,6 @@ class _TransferListState extends State<TransferList> {
           contact: contactList[index],
         );
       },
-    );
-  }
-
-  Widget _buildLoading() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[CircularProgressIndicator(), Text('Loading...')],
-      ),
     );
   }
 
