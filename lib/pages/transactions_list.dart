@@ -3,6 +3,7 @@ import 'package:flutter_local_db/models/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_db/services/http/web_client.dart';
 
+import 'widgets/empty_list_placeholder.dart';
 import 'widgets/progress_indicator_widget.dart';
 import 'widgets/transaction_tile.dart';
 
@@ -26,37 +27,66 @@ class TransactionsList extends StatelessWidget {
       appBar: AppBar(
         title: Text('Transactions'),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {}
+      ),
       body: FutureBuilder<List<Transaction>>(
         future: getAllTransactions(),
         builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              return ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  return TransactionTile(transaction: snapshot.data[index]);
-                },
-              );
-              break;
+          if(!snapshot.hasError) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.done:
+                final List<Transaction> transactionList = snapshot.data;
 
-            case ConnectionState.none:
-              return Container();
-              break;
+                if(transactionList.isEmpty) {
+                  return EmptyListPlaceHolder(
+                    icon: Icons.list,
+                    message: 'No data available'
+                  );
+                }
+                else {
+                  return _buildTransactionList(transactionList);
+                }
+                break;
 
-            case ConnectionState.waiting:
-              return ProgressIndicatorWidget();
-              break;
+              case ConnectionState.none:
+                return Container();
+                break;
 
-            case ConnectionState.active:
-              return Container();
-              break;
-            
-            default:
-              return Container();
-              break;
+              case ConnectionState.waiting:
+                return ProgressIndicatorWidget();
+                break;
+
+              case ConnectionState.active:
+                return Container();
+                break;
+              
+              default:
+                return EmptyListPlaceHolder(
+                  icon: Icons.error_outline,
+                  message: 'Something went wrong'
+                );
+                break;
+            }
+          }
+          else {
+            return EmptyListPlaceHolder(
+              icon: Icons.error_outline,
+              message: 'Something went worng'
+            );
           }
         }
       )
+    );
+  }
+
+  ListView _buildTransactionList(List<Transaction> transactionList) {
+    return ListView.builder(
+      itemCount: transactionList.length,
+      itemBuilder: (context, index) {
+        return TransactionTile(transaction: transactionList[index]);
+      },
     );
   }
 }
