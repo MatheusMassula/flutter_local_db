@@ -1,3 +1,4 @@
+import 'package:flutter_local_db/pages/transaction_form.dart';
 import 'package:flutter_local_db/services/database/dao/contact_dao.dart';
 import 'package:flutter_local_db/pages/widgets/contact_tile.dart';
 import 'package:flutter_local_db/pages/contact_form.dart';
@@ -56,8 +57,16 @@ class _TransferListState extends State<TransferList> {
     return ListView.builder(
       itemCount: contactList.length,
       itemBuilder: (context, index) {
+        final Contact contact = contactList[index];
+        print('contact: ${contact.toJson()}');
+
         return ContactTile(
-          contact: contactList[index],
+          contact: contact,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => TransactionForm(contact: contact,))
+            );
+          },
         );
       },
     );

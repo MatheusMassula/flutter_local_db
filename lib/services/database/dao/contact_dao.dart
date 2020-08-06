@@ -8,7 +8,7 @@ class ContactDao {
   static const _TABLE_NAME = 'contact';
   static const _ID = 'id';
   static const _NAME = 'name';
-  static const _ACCOUNT = 'account';
+  static const _ACCOUNT = 'accountNumber';
 
   Future<int> insert({@required Contact contact}) async {
     final Database db = await getDatabase();

@@ -22,7 +22,7 @@ class TransactionTile extends StatelessWidget {
           ),
         ),
         subtitle: Text(
-          '${transaction.contact.account}',
+          '${transaction.contact.accountNumber}',
           style: TextStyle(
             fontSize: 16.0,
           ),
