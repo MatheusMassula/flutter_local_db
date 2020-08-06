@@ -1,13 +1,13 @@
+import 'package:flutter_local_db/services/http/webclients/transaction_web_client.dart';
 import 'package:flutter_local_db/models/transaction.dart';
 import 'package:flutter_local_db/models/contact.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_local_db/services/http/web_client.dart';
-
-import 'widgets/empty_list_placeholder.dart';
 import 'widgets/progress_indicator_widget.dart';
+import 'widgets/empty_list_placeholder.dart';
 import 'widgets/transaction_tile.dart';
+import 'package:flutter/material.dart';
 
 class TransactionsList extends StatelessWidget {
+  final TransactionWebClient _transactionWebClient = TransactionWebClient();
   final List<Transaction> transactions = List();
 
   @override
@@ -32,7 +32,7 @@ class TransactionsList extends StatelessWidget {
         onPressed: () {}
       ),
       body: FutureBuilder<List<Transaction>>(
-        future: getAllTransactions(),
+        future: _transactionWebClient.getAllTransactions(),
         builder: (context, snapshot) {
           if(!snapshot.hasError) {
             switch (snapshot.connectionState) {
