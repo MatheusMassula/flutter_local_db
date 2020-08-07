@@ -7,13 +7,11 @@ import 'dart:convert';
 class TransactionWebClient {
   Future<List<Transaction>> getAllTransactions() async {
     final Response response = await client.get(url).timeout(Duration(seconds: 15));
-    final List<Transaction> transactionList = List();
+    final List<dynamic> jsonList = jsonDecode(response.body);
 
-    for (var transaction in jsonDecode(response.body)) {
-      transactionList.add(Transaction.fromJson(transaction));
-    }
-
-    return transactionList;
+    return jsonList
+      .map((transaction) => Transaction.fromJson(transaction))
+      .toList();
   }
 
   Future<Transaction> sendTransaction({@required Transaction transaction}) async {

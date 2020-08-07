@@ -27,10 +27,6 @@ class TransactionsList extends StatelessWidget {
       appBar: AppBar(
         title: Text('Transactions'),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {}
-      ),
       body: FutureBuilder<List<Transaction>>(
         future: _transactionWebClient.getAllTransactions(),
         builder: (context, snapshot) {
