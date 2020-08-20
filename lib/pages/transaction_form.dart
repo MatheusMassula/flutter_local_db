@@ -1,3 +1,4 @@
+import 'package:flutter_local_db/pages/widgets/transaction_auth_dialog.dart';
 import 'package:flutter_local_db/services/http/webclients/transaction_web_client.dart';
 import 'package:flutter_local_db/models/transaction.dart';
 import 'package:flutter_local_db/models/contact.dart';
@@ -68,14 +69,15 @@ class _TransactionFormState extends State<TransactionForm> {
                   width: double.maxFinite,
                   child: RaisedButton(
                     onPressed: () {
-                      final double value = double.tryParse(_valueController.text);
-                      final transactionRequested = Transaction(value, widget.contact);
-                      _transactionWebClient.sendTransaction(transaction: transactionRequested)
-                      .then((transactionResponse) => {
-                        if(transactionResponse != null) {
-                          Navigator.of(context).pop()
-                        }
-                      });
+                      showDialog(
+                        context: context,
+                        builder: (context) => TransactionAuthDialog(
+                          onTapConfirm: (String password) {
+                            print(password);
+                            _sendTransaction(password);
+                          },
+                        )
+                      );
                     },
                     child: Text('Transfer'),
                   ),
@@ -86,5 +88,16 @@ class _TransactionFormState extends State<TransactionForm> {
         ),
       ),
     );
+  }
+
+  void _sendTransaction(String password) {
+    final double value = double.tryParse(_valueController.text);
+    final transactionRequested = Transaction(value, widget.contact);
+    _transactionWebClient.sendTransaction(transaction: transactionRequested, password: password)
+      .then((transactionResponse) => {
+        if(transactionResponse != null) {
+          Navigator.of(context).pop()
+        }
+      });
   }
 }

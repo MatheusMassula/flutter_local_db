@@ -14,10 +14,10 @@ class TransactionWebClient {
       .toList();
   }
 
-  Future<Transaction> sendTransaction({@required Transaction transaction}) async {
+  Future<Transaction> sendTransaction({@required Transaction transaction, String password}) async {
     final Map<String, String> header = {
       'Content-Type': 'application/json',
-      'password': '1000'
+      'password': password
     };
 
     final Response response = await client.post(
