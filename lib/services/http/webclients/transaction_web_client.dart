@@ -26,6 +26,15 @@ class TransactionWebClient {
       body: jsonEncode(transaction.toJson())
     ).timeout(Duration(seconds: 15));
 
+    switch (response.statusCode) {
+      case 400:
+        throw Exception('There was an error submitting transaction');
+        break;
+      case 401:
+      throw Exception('Unauthorized transaction');
+        break;
+    }
+
     return Transaction.fromJson(jsonDecode(response.body));
   }
 }

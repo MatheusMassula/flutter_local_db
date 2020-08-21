@@ -1,3 +1,4 @@
+import 'package:flutter_local_db/pages/widgets/response_dialog.dart';
 import 'package:flutter_local_db/pages/widgets/transaction_auth_dialog.dart';
 import 'package:flutter_local_db/services/http/webclients/transaction_web_client.dart';
 import 'package:flutter_local_db/models/transaction.dart';
@@ -94,10 +95,20 @@ class _TransactionFormState extends State<TransactionForm> {
     final double value = double.tryParse(_valueController.text);
     final transactionRequested = Transaction(value, widget.contact);
     _transactionWebClient.sendTransaction(transaction: transactionRequested, password: password)
-      .then((transactionResponse) => {
+      .then((transactionResponse) {
         if(transactionResponse != null) {
-          Navigator.of(context).pop()
+          showDialog(
+            context: context,
+            builder: (dialogContext) => SuccessDialog('Successfull transaction')
+          ).then((value) => Navigator.of(context).pop());
         }
-      });
+      })
+      .catchError((onError) {
+        showDialog(
+          context: context,
+          builder: (context) => FailureDialog(message: onError.message)
+        );
+      },
+      test: (error) => error is Exception,);
   }
 }
