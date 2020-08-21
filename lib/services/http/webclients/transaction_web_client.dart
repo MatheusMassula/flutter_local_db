@@ -14,27 +14,30 @@ class TransactionWebClient {
       .toList();
   }
 
-  Future<Transaction> sendTransaction({@required Transaction transaction, String password}) async {
+  Future<Transaction> sendTransaction({
+    @required Transaction transaction,
+    String password
+  }) async {
     final Map<String, String> header = {
       'Content-Type': 'application/json',
       'password': password
     };
 
-    final Response response = await client.post(
-      url,
-      headers: header,
-      body: jsonEncode(transaction.toJson())
-    ).timeout(Duration(seconds: 15));
+    final Response response = await client
+      .post(url, headers: header, body: jsonEncode(transaction.toJson()))
+      .timeout(Duration(seconds: 15));
 
-    switch (response.statusCode) {
-      case 400:
-        throw Exception('There was an error submitting transaction');
-        break;
-      case 401:
-      throw Exception('Unauthorized transaction');
-        break;
-    }
-
-    return Transaction.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      return Transaction.fromJson(jsonDecode(response.body));
+    } 
+    _throwHttpError(response.statusCode);
   }
+
+  void _throwHttpError(int statusCode) =>
+    throw Exception(_statusCodeResponse[statusCode]);
+
+  static final Map<int, String> _statusCodeResponse = {
+    400: 'There was an error submitting transaction',
+    401: 'Unauthorized transaction'
+  };
 }

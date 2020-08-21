@@ -91,24 +91,29 @@ class _TransactionFormState extends State<TransactionForm> {
     );
   }
 
-  void _sendTransaction(String password) {
+  void _sendTransaction(String password) async {
     final double value = double.tryParse(_valueController.text);
-    final transactionRequested = Transaction(value, widget.contact);
-    _transactionWebClient.sendTransaction(transaction: transactionRequested, password: password)
-      .then((transactionResponse) {
-        if(transactionResponse != null) {
-          showDialog(
-            context: context,
-            builder: (dialogContext) => SuccessDialog('Successfull transaction')
-          ).then((value) => Navigator.of(context).pop());
-        }
-      })
-      .catchError((onError) {
+    final Transaction transactionRequested = Transaction(value, widget.contact);
+    final Transaction transactionResponse = await _transactionWebClient.sendTransaction(
+      transaction: transactionRequested,
+      password: password
+    ).catchError(
+      (onError) {
         showDialog(
           context: context,
           builder: (context) => FailureDialog(message: onError.message)
         );
       },
-      test: (error) => error is Exception,);
+      test: (error) => error is Exception
+    );
+
+    if(transactionResponse != null) {
+      await showDialog(
+        context: context,
+        builder: (dialogContext) => SuccessDialog('Successfull transaction')
+      );
+
+      Navigator.of(context).pop();
+    }
   }
 }
