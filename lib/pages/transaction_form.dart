@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_local_db/pages/widgets/progress_indicator_widget.dart';
 import 'package:flutter_local_db/pages/widgets/response_dialog.dart';
 import 'package:flutter_local_db/pages/widgets/transaction_auth_dialog.dart';
 import 'package:flutter_local_db/services/http/webclients/transaction_web_client.dart';
@@ -24,12 +25,10 @@ class _TransactionFormState extends State<TransactionForm> {
   final _valueController = TextEditingController();
   final TransactionWebClient _transactionWebClient = TransactionWebClient();
   final String transactionId = Uuid().v4();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    print('contact to transfer: ${widget.contact.toJson()}');
-    print('transactionId: $transactionId');
-
     return Scaffold(
       appBar: AppBar(
         title: Text('New transaction'),
@@ -40,6 +39,10 @@ class _TransactionFormState extends State<TransactionForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Visibility(
+                visible: _isLoading,
+                child: ProgressIndicatorWidget(message: 'Sending...'),
+              ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
@@ -97,6 +100,9 @@ class _TransactionFormState extends State<TransactionForm> {
   }
 
   void _sendTransaction(String password) async {
+    setState(() {
+      _isLoading = true;
+    });
     final double value = double.tryParse(_valueController.text);
     final Transaction transactionRequested = Transaction(
       transactionId,
@@ -105,6 +111,9 @@ class _TransactionFormState extends State<TransactionForm> {
     );
     Transaction transactionResponse = await _send(transactionRequested, password);
 
+    setState(() {
+      _isLoading = false;
+    });
     await _showSuccessfulMessage(transactionResponse);
   }
 
