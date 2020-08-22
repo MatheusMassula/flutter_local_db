@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_local_db/pages/widgets/response_dialog.dart';
 import 'package:flutter_local_db/pages/widgets/transaction_auth_dialog.dart';
 import 'package:flutter_local_db/services/http/webclients/transaction_web_client.dart';
@@ -94,26 +96,46 @@ class _TransactionFormState extends State<TransactionForm> {
   void _sendTransaction(String password) async {
     final double value = double.tryParse(_valueController.text);
     final Transaction transactionRequested = Transaction(value, widget.contact);
-    final Transaction transactionResponse = await _transactionWebClient.sendTransaction(
-      transaction: transactionRequested,
-      password: password
-    ).catchError(
-      (onError) {
-        showDialog(
-          context: context,
-          builder: (context) => FailureDialog(message: onError.message)
-        );
-      },
-      test: (error) => error is Exception
-    );
+    Transaction transactionResponse = await _send(transactionRequested, password);
 
+    await _showSuccessfulMessage(transactionResponse);
+  }
+
+  Future _showSuccessfulMessage(Transaction transactionResponse) async {
     if(transactionResponse != null) {
       await showDialog(
         context: context,
         builder: (dialogContext) => SuccessDialog('Successfull transaction')
       );
-
+    
       Navigator.of(context).pop();
     }
+  }
+
+  Future<Transaction> _send(Transaction transactionRequested, String password) async {
+    final Transaction transactionResponse = await _transactionWebClient.sendTransaction(
+      transaction: transactionRequested,
+      password: password
+    )
+    .catchError(
+      (onError) => _showFailureMessage(context, message: onError.message),
+      test: (error) => error is HttpException
+    )
+    .catchError(
+      (onError) => _showFailureMessage(context, message: 'We could not reach the server'),
+      test: (error) => error is TimeoutException,
+    )
+    .catchError(
+      (onError) => _showFailureMessage(context),
+      test: (error) => error is Exception,
+    );
+    return transactionResponse;
+  }
+
+  void _showFailureMessage(BuildContext context, {String message = 'Unknown error'}) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => FailureDialog(message: message)
+    );
   }
 }

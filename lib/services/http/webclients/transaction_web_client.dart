@@ -6,7 +6,7 @@ import 'dart:convert';
 
 class TransactionWebClient {
   Future<List<Transaction>> getAllTransactions() async {
-    final Response response = await client.get(url).timeout(Duration(seconds: 15));
+    final Response response = await client.get(url);
     final List<dynamic> jsonList = jsonDecode(response.body);
 
     return jsonList
@@ -24,20 +24,24 @@ class TransactionWebClient {
     };
 
     final Response response = await client
-      .post(url, headers: header, body: jsonEncode(transaction.toJson()))
-      .timeout(Duration(seconds: 15));
+      .post(url, headers: header, body: jsonEncode(transaction.toJson()));
 
     if (response.statusCode == 200) {
       return Transaction.fromJson(jsonDecode(response.body));
-    } 
-    _throwHttpError(response.statusCode);
-  }
+    }
 
-  void _throwHttpError(int statusCode) =>
-    throw Exception(_statusCodeResponse[statusCode]);
+    print('response.statusCode: ${response.statusCode}');
+    throw HttpException(_statusCodeResponse[response.statusCode]);
+  }
 
   static final Map<int, String> _statusCodeResponse = {
     400: 'There was an error submitting transaction',
     401: 'Unauthorized transaction'
   };
+}
+
+class HttpException implements Exception {
+  final String message;
+
+  HttpException(this.message);
 }
