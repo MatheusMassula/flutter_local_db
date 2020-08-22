@@ -6,6 +6,7 @@ import 'package:flutter_local_db/services/http/webclients/transaction_web_client
 import 'package:flutter_local_db/models/transaction.dart';
 import 'package:flutter_local_db/models/contact.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class TransactionForm extends StatefulWidget {
   final Contact contact;
@@ -22,10 +23,12 @@ class TransactionForm extends StatefulWidget {
 class _TransactionFormState extends State<TransactionForm> {
   final _valueController = TextEditingController();
   final TransactionWebClient _transactionWebClient = TransactionWebClient();
+  final String transactionId = Uuid().v4();
 
   @override
   Widget build(BuildContext context) {
     print('contact to transfer: ${widget.contact.toJson()}');
+    print('transactionId: $transactionId');
 
     return Scaffold(
       appBar: AppBar(
@@ -95,7 +98,11 @@ class _TransactionFormState extends State<TransactionForm> {
 
   void _sendTransaction(String password) async {
     final double value = double.tryParse(_valueController.text);
-    final Transaction transactionRequested = Transaction(value, widget.contact);
+    final Transaction transactionRequested = Transaction(
+      transactionId,
+      value,
+      widget.contact
+    );
     Transaction transactionResponse = await _send(transactionRequested, password);
 
     await _showSuccessfulMessage(transactionResponse);

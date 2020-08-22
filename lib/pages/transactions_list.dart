@@ -1,6 +1,5 @@
 import 'package:flutter_local_db/services/http/webclients/transaction_web_client.dart';
 import 'package:flutter_local_db/models/transaction.dart';
-import 'package:flutter_local_db/models/contact.dart';
 import 'widgets/progress_indicator_widget.dart';
 import 'widgets/empty_list_placeholder.dart';
 import 'widgets/transaction_tile.dart';
@@ -12,17 +11,6 @@ class TransactionsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    transactions.add(
-      Transaction(
-        100.0,
-        Contact(
-          0,
-          'Alex',
-          1000
-        )
-      )
-    );
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Transactions'),

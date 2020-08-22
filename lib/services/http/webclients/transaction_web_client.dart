@@ -31,12 +31,13 @@ class TransactionWebClient {
     }
 
     print('response.statusCode: ${response.statusCode}');
-    throw HttpException(_statusCodeResponse[response.statusCode]);
+    throw HttpException(_statusCodeResponse[response.statusCode]?? 'Unknown error');
   }
 
   static final Map<int, String> _statusCodeResponse = {
     400: 'There was an error submitting transaction',
-    401: 'Unauthorized transaction'
+    401: 'Unauthorized transaction',
+    409: 'Tranference already exists'
   };
 }
 
