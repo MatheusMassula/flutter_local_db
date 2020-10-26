@@ -11,37 +11,46 @@ class Dashboard extends StatelessWidget {
       appBar: AppBar(
         title: Text('Dashboard'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset('assets/images/bytebank_logo.png'),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints boxConstraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: boxConstraints.maxHeight
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                DashboardCard(
-                  title: 'Transfer',
-                  icon: Icons.monetization_on,
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => TransferList())
-                  ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset('assets/images/bytebank_logo.png'),
                 ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: <Widget>[
+                      DashboardCard(
+                        title: 'Transfer',
+                        icon: Icons.monetization_on,
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => TransferList())
+                        ),
+                      ),
 
-                DashboardCard(
-                  title: 'Transactions',
-                  icon: Icons.description,
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => TransactionsList())
+                      DashboardCard(
+                        title: 'Transactions',
+                        icon: Icons.description,
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => TransactionsList())
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
