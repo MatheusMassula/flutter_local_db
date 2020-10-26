@@ -10,9 +10,24 @@ void main() {
     expect(logoImage, findsOneWidget);
   });
 
-  testWidgets('Should display the first feature when the Dashboard is opened', (WidgetTester tester) async {
+  testWidgets('Should display the the transfer feature when the Dashboard is opened', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: Dashboard()));
-    final Finder dashBoardItem = find.byType(DashboardCard);
-    expect(dashBoardItem, findsWidgets);
+    final tranferFeatureItem = find.byWidgetPredicate(
+      (widget) => _dashBoadCardMatcher(widget: widget, title: 'Transfer', icon: Icons.monetization_on)
+    );
+    expect(tranferFeatureItem, findsOneWidget);
   });
+
+  testWidgets('Should display the the transaction feed feature when the Dashboard is opened', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: Dashboard()));
+    final tranferFeatureItem = find.byWidgetPredicate(
+      (widget) => _dashBoadCardMatcher(widget: widget, title: 'Transactions', icon: Icons.description)
+    );
+    expect(tranferFeatureItem, findsOneWidget);
+  });
+}
+
+bool _dashBoadCardMatcher({Widget widget, String title, IconData icon}) {
+  if(widget is DashboardCard && widget.title == title && widget.icon == icon) return true;
+  else return false;
 }
