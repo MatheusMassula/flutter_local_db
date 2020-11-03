@@ -6,10 +6,12 @@ import 'package:flutter_local_db/pages/transfer_list.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'matchers.dart';
+import 'mocks.dart';
 
 void main() {
   testWidgets('Should save a contact', (tester) async {
-    await tester.pumpWidget(ByteBankApp());
+    final mockContactDao = MockContactDao();
+    await tester.pumpWidget(ByteBankApp(contactDao: mockContactDao));
 
     final dashboard = find.byType(Dashboard);
     expect(dashboard, findsOneWidget);
@@ -29,7 +31,7 @@ void main() {
     expect(contactList, findsOneWidget);
 
     final addContact = find.widgetWithIcon(FloatingActionButton, Icons.add);
-    expect(addContact, findsNothing);
+    expect(addContact, findsOneWidget);
     await tester.tap(addContact);
     await tester.pumpAndSettle();
 

@@ -7,12 +7,15 @@ import 'widgets/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 
 class TransferList extends StatefulWidget {
+  final ContactDao contactDao;
+
+  const TransferList({Key key, this.contactDao}) : super(key: key);
+
   @override
   _TransferListState createState() => _TransferListState();
 }
 
 class _TransferListState extends State<TransferList> {
-  final ContactDao _contactDao = ContactDao();
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,7 @@ class _TransferListState extends State<TransferList> {
         ),
         body: FutureBuilder(
           initialData: List(),
-          future: _contactDao.getAll(),
+          future: widget.contactDao.getAll(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.done:
