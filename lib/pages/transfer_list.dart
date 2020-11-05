@@ -77,7 +77,7 @@ class _TransferListState extends State<TransferList> {
 
   void _addContact(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => ContactForm())
+      MaterialPageRoute(builder: (context) => ContactForm(contactDao: widget.contactDao))
     ).then(
       (value) {
         setState(() {

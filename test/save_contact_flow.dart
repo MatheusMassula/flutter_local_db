@@ -37,5 +37,33 @@ void main() {
 
     final contactForm = find.byType(ContactForm);
     expect(contactForm, findsOneWidget);
+
+    final nameTextFiel = find.byWidgetPredicate((widget) {
+      if(widget is TextField) {
+        return widget.decoration.labelText == 'Full name';
+      }
+      return false;
+    });
+    expect(nameTextFiel, findsOneWidget);
+
+    await tester.enterText(nameTextFiel, 'New name');
+
+    final accountNumberTextFiel = find.byWidgetPredicate((widget) {
+      if(widget is TextField) {
+        return widget.decoration.labelText == 'Account number';
+      }
+      return false;
+    });
+    expect(accountNumberTextFiel, findsOneWidget);
+
+    await tester.enterText(accountNumberTextFiel, '1000');
+
+    final createButton = find.widgetWithText(RaisedButton, 'Create');
+    expect(createButton, findsOneWidget);
+    await tester.tap(createButton);
+    await tester.pumpAndSettle();
+    
+    final updatedContactList = find.byType(TransferList);
+    expect(updatedContactList, findsOneWidget);
   });
 }
