@@ -7,8 +7,9 @@ import 'package:flutter_local_db/pages/transfer_list.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'matchers.dart';
-import 'mocks.dart';
+import '../matchers/matchers.dart';
+import '../mocks/mocks.dart';
+import 'events/events.dart';
 
 void main() {
   testWidgets('Should save a contact', (tester) async {
@@ -18,13 +19,7 @@ void main() {
     final dashboard = find.byType(Dashboard);
     expect(dashboard, findsOneWidget);
 
-    final transferFeatureItem = find.byWidgetPredicate((widget) =>
-        dashBoadCardMatcher(
-            widget: widget, title: 'Transfer', icon: Icons.monetization_on));
-    expect(transferFeatureItem, findsOneWidget);
-
-    await tester.tap(transferFeatureItem);
-    //As the tap action changes the UI (in this case), we should place an pump method to reload the window
+    await tapOnTransferItem(tester);
     await tester.pumpAndSettle();
 
     final contactList = find.byType(TransferList);
