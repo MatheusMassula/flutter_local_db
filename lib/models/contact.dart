@@ -6,18 +6,29 @@ class Contact {
   Contact(this.id, this.name, this.accountNumber);
 
   Contact.fromJson(Map<String, dynamic> json)
-    : id = json['id'],
-      name = json['name'],
-      accountNumber = json['accountNumber'];
+      : id = json['id'],
+        name = json['name'],
+        accountNumber = json['accountNumber'];
 
   Map<String, dynamic> toJsonWithoutId() => {
-    'name': name,
-    'accountNumber': accountNumber,
-  };
+        'name': name,
+        'accountNumber': accountNumber,
+      };
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'accountNumber': accountNumber,
-  };
+        'id': id,
+        'name': name,
+        'accountNumber': accountNumber,
+      };
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Contact &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          accountNumber == other.accountNumber;
+
+  @override
+  int get hashCode => name.hashCode ^ accountNumber.hashCode;
 }

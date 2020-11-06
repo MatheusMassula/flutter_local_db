@@ -5,8 +5,14 @@ import 'widgets/empty_list_placeholder.dart';
 import 'widgets/transaction_tile.dart';
 import 'package:flutter/material.dart';
 
-class TransactionsList extends StatelessWidget {
+class TransactionsList extends StatefulWidget {
+  @override
+  _TransactionsListState createState() => _TransactionsListState();
+}
+
+class _TransactionsListState extends State<TransactionsList> {
   final TransactionWebClient _transactionWebClient = TransactionWebClient();
+
   final List<Transaction> transactions = List();
 
   @override
