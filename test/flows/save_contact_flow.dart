@@ -36,7 +36,7 @@ void main() {
     expect(contactForm, findsOneWidget);
 
     final nameTextFiel = find
-        .byWidgetPredicate((widget) => textFieldMatcher(widget, 'Full name'));
+        .byWidgetPredicate((widget) => textFieldMatcher(widget: widget, labelText: 'Full name'));
     expect(nameTextFiel, findsOneWidget);
 
     await tester.enterText(nameTextFiel, 'New name');

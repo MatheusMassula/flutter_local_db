@@ -6,7 +6,7 @@ bool dashBoadCardMatcher({Widget widget, String title, IconData icon}) {
   else return false;
 }
 
-bool textFieldMatcher(Widget widget, String labelText) {
+bool textFieldMatcher({Widget widget, String labelText}) {
   if(widget is TextField) {
     return widget.decoration.labelText == labelText;
   }
