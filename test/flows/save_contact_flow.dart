@@ -12,8 +12,13 @@ import '../mocks/mocks.dart';
 import 'events/events.dart';
 
 void main() {
+  MockContactDao mockContactDao;
+
+  setUp(() async {
+    mockContactDao = MockContactDao();
+  });
+
   testWidgets('Should save a contact', (tester) async {
-    final mockContactDao = MockContactDao();
     await tester.pumpWidget(ByteBankApp(contactDao: mockContactDao));
 
     final dashboard = find.byType(Dashboard);
@@ -42,7 +47,7 @@ void main() {
     await tester.enterText(nameTextFiel, 'New name');
 
     final accountNumberTextFiel = find.byWidgetPredicate(
-        (widget) => textFieldMatcher(widget, 'Account number'));
+        (widget) => textFieldMatcher(widget: widget, labelText: 'Account number'));
     expect(accountNumberTextFiel, findsOneWidget);
 
     await tester.enterText(accountNumberTextFiel, '1000');
@@ -52,13 +57,8 @@ void main() {
     await tester.tap(createButton);
     await tester.pumpAndSettle();
 
-    verify(
-      mockContactDao.insert(contact: Contact(
-        0,
-        'New name',
-        1000
-      ))
-    ).called(1);
+    verify(mockContactDao.insert(contact: Contact(0, 'New name', 1000)))
+    .called(1);
 
     final updatedContactList = find.byType(TransferList);
     expect(updatedContactList, findsOneWidget);
