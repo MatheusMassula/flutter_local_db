@@ -7,7 +7,6 @@ import 'package:flutter_local_db/pages/transfer_list.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../matchers/matchers.dart';
 import '../mocks/mocks.dart';
 import 'events/events.dart';
 
@@ -32,29 +31,17 @@ void main() {
 
     verify(mockContactDao.getAll()).called(1);
 
-    final addContact = find.widgetWithIcon(FloatingActionButton, Icons.add);
-    expect(addContact, findsOneWidget);
-    await tester.tap(addContact);
+    await tapOnAddContactFloatButton(tester);
     await tester.pumpAndSettle();
 
     final contactForm = find.byType(ContactForm);
     expect(contactForm, findsOneWidget);
 
-    final nameTextFiel = find
-        .byWidgetPredicate((widget) => textFieldByLabelTextMatcher(widget: widget, labelText: 'Full name'));
-    expect(nameTextFiel, findsOneWidget);
+    await fillTextFieldByLabelText(tester: tester, labelText: 'Full name', text: 'New name');
 
-    await tester.enterText(nameTextFiel, 'New name');
+    await fillTextFieldByLabelText(tester: tester, labelText: 'Account number', text: '1000');
 
-    final accountNumberTextFiel = find.byWidgetPredicate(
-        (widget) => textFieldByLabelTextMatcher(widget: widget, labelText: 'Account number'));
-    expect(accountNumberTextFiel, findsOneWidget);
-
-    await tester.enterText(accountNumberTextFiel, '1000');
-
-    final createButton = find.widgetWithText(RaisedButton, 'Create');
-    expect(createButton, findsOneWidget);
-    await tester.tap(createButton);
+    await tapOnWidgetWithText(tester: tester, type: RaisedButton, text: 'Create');
     await tester.pumpAndSettle();
 
     verify(mockContactDao.insert(contact: Contact(0, 'New name', 1000)))

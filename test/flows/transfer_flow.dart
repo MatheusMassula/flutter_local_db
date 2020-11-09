@@ -11,7 +11,6 @@ import 'package:flutter_local_db/pages/widgets/transaction_auth_dialog.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../matchers/matchers.dart';
 import '../mocks/mocks.dart';
 import 'events/events.dart';
 
@@ -27,7 +26,8 @@ void main() {
   testWidgets('Tranfer to a contact', (tester) async {
     await tester.pumpWidget(ByteBankApp(
       contactDao: mockContactDao,
-      transactionWebClient: mockTransactionWebClient));
+      transactionWebClient: mockTransactionWebClient
+    ));
 
     final dashboard = find.byType(Dashboard);
     expect(dashboard, findsOneWidget);
@@ -52,20 +52,15 @@ void main() {
       return false;
     });
     expect(contact, findsWidgets);
-
     await tester.tap(contact.first);
     await tester.pumpAndSettle();
 
     final transactionForm = find.byType(TransactionForm);
     expect(transactionForm, findsOneWidget);
 
-    final valueField = find.byWidgetPredicate((widget) =>
-      textFieldByLabelTextMatcher(widget: widget, labelText: 'Value'));
-    expect(valueField, findsOneWidget);
-    await tester.enterText(valueField, '100');
+    await fillTextFieldByLabelText(tester: tester, labelText: 'Value', text: '100');
 
-    final transferButton = find.widgetWithText(RaisedButton, 'Transfer');
-    await tester.tap(transferButton);
+    await tapOnWidgetWithText(tester: tester, type: RaisedButton, text: 'Transfer');
     await tester.pumpAndSettle();
 
     final authDialog = find.byType(TransactionAuthDialog);
@@ -78,24 +73,19 @@ void main() {
     final calcelButton = find.widgetWithText(FlatButton, 'Cancel');
     expect(calcelButton, findsOneWidget);
 
-    final acceptButton = find.widgetWithText(FlatButton, 'Accept');
-    expect(acceptButton, findsOneWidget);
-
     when(mockTransactionWebClient.sendTransaction(
       transaction: Transaction(null, 100, contactMock),
       password: '1000'
     ))
     .thenAnswer((_) async => Transaction(null, 100, contactMock));
 
-    await tester.tap(acceptButton);
+    await tapOnWidgetWithText(tester: tester, type: FlatButton, text: 'Accept');
     await tester.pumpAndSettle();
 
     final successDialog = find.byType(SuccessDialog);
     expect(successDialog, findsOneWidget);
 
-    final successConfirmButton = find.widgetWithText(FlatButton, 'Ok');
-    expect(successConfirmButton, findsOneWidget);
-    await tester.tap(successConfirmButton);
+    await tapOnWidgetWithText(tester: tester, type: FlatButton, text: 'Ok');
     await tester.pumpAndSettle();
 
     final contactListBack = find.byType(TransferList);
