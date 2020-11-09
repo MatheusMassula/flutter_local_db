@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_db/pages/transactions_list.dart';
 import 'package:flutter_local_db/pages/transfer_list.dart';
-import 'package:flutter_local_db/services/database/dao/contact_dao.dart';
-
 import 'widgets/dashboard_card.dart';
 
 class Dashboard extends StatelessWidget {
 
-  final ContactDao contactDao;
-
-  const Dashboard({Key key, @required this.contactDao}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('Dashboard'),
@@ -39,7 +34,7 @@ class Dashboard extends StatelessWidget {
                         title: 'Transfer',
                         icon: Icons.monetization_on,
                         onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => TransferList(contactDao: contactDao))
+                          MaterialPageRoute(builder: (context) => TransferList())
                         ),
                       ),
 

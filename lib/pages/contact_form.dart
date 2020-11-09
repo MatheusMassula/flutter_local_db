@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_db/models/contact.dart';
 import 'package:flutter_local_db/services/database/dao/contact_dao.dart';
+import 'package:flutter_local_db/widgets/app_dependencies.dart';
 
 class ContactForm extends StatefulWidget {
-  final ContactDao contactDao;
 
-  const ContactForm({Key key, @required this.contactDao}) : super(key: key);
   @override
   _ContactFormState createState() => _ContactFormState();
 }
@@ -17,6 +16,8 @@ class _ContactFormState extends State<ContactForm> {
 
   @override
   Widget build(BuildContext context) {
+    final dependencies = AppDependencies.of(context);
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('New contact'),
@@ -56,7 +57,7 @@ class _ContactFormState extends State<ContactForm> {
                 child: SizedBox(
                   width: double.infinity,
                   child: RaisedButton(
-                    onPressed: () => _validateForm(),
+                    onPressed: () => _validateForm(dependencies.contactDao),
                     child: Text('Create'),
                   ),
                 ),
@@ -68,7 +69,7 @@ class _ContactFormState extends State<ContactForm> {
     );
   }
 
-  void _validateForm() async {
+  void _validateForm(ContactDao contactDao) async {
     if(_formKey.currentState.validate()) {
       Contact newContact = Contact(
         0,
@@ -76,7 +77,7 @@ class _ContactFormState extends State<ContactForm> {
         int.tryParse(_accountController.text),
       );
 
-      await widget.contactDao.insert(contact: newContact);
+      await contactDao.insert(contact: newContact);
       Navigator.pop(context);
     }
   }

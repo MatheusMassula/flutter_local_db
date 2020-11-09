@@ -1,15 +1,12 @@
 import 'package:flutter_local_db/pages/transaction_form.dart';
-import 'package:flutter_local_db/services/database/dao/contact_dao.dart';
 import 'package:flutter_local_db/pages/widgets/contact_tile.dart';
 import 'package:flutter_local_db/pages/contact_form.dart';
 import 'package:flutter_local_db/models/contact.dart';
+import 'package:flutter_local_db/widgets/app_dependencies.dart';
 import 'widgets/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 
 class TransferList extends StatefulWidget {
-  final ContactDao contactDao;
-
-  const TransferList({Key key, this.contactDao}) : super(key: key);
 
   @override
   _TransferListState createState() => _TransferListState();
@@ -19,6 +16,8 @@ class _TransferListState extends State<TransferList> {
 
   @override
   Widget build(BuildContext context) {
+    final dependencies = AppDependencies.of(context);
+    
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () => _addContact(context),
@@ -29,7 +28,7 @@ class _TransferListState extends State<TransferList> {
         ),
         body: FutureBuilder(
           initialData: List(),
-          future: widget.contactDao.getAll(),
+          future: dependencies.contactDao.getAll(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.done:
@@ -67,7 +66,7 @@ class _TransferListState extends State<TransferList> {
           contact: contact,
           onTap: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => TransactionForm(contact: contact,))
+              MaterialPageRoute(builder: (context) => TransactionForm(contact: contact))
             );
           },
         );
@@ -77,7 +76,7 @@ class _TransferListState extends State<TransferList> {
 
   void _addContact(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => ContactForm(contactDao: widget.contactDao))
+      MaterialPageRoute(builder: (context) => ContactForm())
     ).then(
       (value) {
         setState(() {

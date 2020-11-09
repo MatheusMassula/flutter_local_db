@@ -1,5 +1,6 @@
 import 'package:flutter_local_db/services/http/webclients/transaction_web_client.dart';
 import 'package:flutter_local_db/models/transaction.dart';
+import 'package:flutter_local_db/widgets/app_dependencies.dart';
 import 'widgets/progress_indicator_widget.dart';
 import 'widgets/empty_list_placeholder.dart';
 import 'widgets/transaction_tile.dart';
@@ -11,18 +12,18 @@ class TransactionsList extends StatefulWidget {
 }
 
 class _TransactionsListState extends State<TransactionsList> {
-  final TransactionWebClient _transactionWebClient = TransactionWebClient();
-
   final List<Transaction> transactions = List();
 
   @override
   Widget build(BuildContext context) {
+    final dependencies = AppDependencies.of(context);
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('Transactions'),
       ),
       body: FutureBuilder<List<Transaction>>(
-        future: _transactionWebClient.getAllTransactions(),
+        future: dependencies.transactionWebClient.getAllTransactions(),
         builder: (context, snapshot) {
           if(!snapshot.hasError) {
             switch (snapshot.connectionState) {
