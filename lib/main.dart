@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_db/services/database/dao/contact_dao.dart';
 import 'package:flutter_local_db/services/http/webclients/transaction_web_client.dart';
 import 'package:flutter_local_db/widgets/app_dependencies.dart';
+import 'package:flutter_local_db/widgets/theme.dart';
 import 'pages/dashboard.dart';
 
 void main() {
@@ -27,14 +28,7 @@ class ByteBankApp extends StatelessWidget {
       contactDao: contactDao,
       transactionWebClient: transactionWebClient,
       child: MaterialApp(
-        theme: ThemeData(
-          primaryColor: Colors.green[900],
-          accentColor: Colors.blueAccent[700],
-          buttonTheme: ButtonThemeData(
-            buttonColor: Colors.blueAccent[700],
-            textTheme: ButtonTextTheme.primary,
-          )
-        ),
+        theme: byteBankTheme,
         home: Dashboard()
       ),
     );
