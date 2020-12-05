@@ -3,6 +3,7 @@ import 'package:flutter_local_db/services/database/dao/contact_dao.dart';
 import 'package:flutter_local_db/services/http/webclients/transaction_web_client.dart';
 import 'package:flutter_local_db/widgets/app_dependencies.dart';
 import 'package:flutter_local_db/widgets/theme.dart';
+import 'pages/counter.dart';
 import 'pages/dashboard.dart';
 
 void main() {
@@ -29,7 +30,8 @@ class ByteBankApp extends StatelessWidget {
       transactionWebClient: transactionWebClient,
       child: MaterialApp(
         theme: byteBankTheme,
-        home: Dashboard()
+        home: CounterContainer()
+        //Dashboard()
       ),
     );
   }
