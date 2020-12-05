@@ -12,13 +12,15 @@ import 'events/events.dart';
 
 void main() {
   MockContactDao mockContactDao;
+  MockTransactionWebClient mockTransactionWebClient;
 
   setUp(() async {
     mockContactDao = MockContactDao();
+    mockTransactionWebClient = MockTransactionWebClient();
   });
 
   testWidgets('Should save a contact', (tester) async {
-    await tester.pumpWidget(ByteBankApp(contactDao: mockContactDao));
+    await tester.pumpWidget(ByteBankApp(contactDao: mockContactDao, transactionWebClient: mockTransactionWebClient));
 
     final dashboard = find.byType(Dashboard);
     expect(dashboard, findsOneWidget);
