@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_db/services/database/dao/contact_dao.dart';
 import 'package:flutter_local_db/services/http/webclients/transaction_web_client.dart';
 import 'package:flutter_local_db/widgets/app_dependencies.dart';
 import 'package:flutter_local_db/widgets/theme.dart';
-import 'pages/counter.dart';
-import 'pages/dashboard.dart';
+import 'pages/name.dart';
 
 void main() {
   runApp(ByteBankApp(
     contactDao: ContactDao(),
     transactionWebClient: TransactionWebClient()
   ));
+}
+
+
+class LogObserver extends BlocObserver {
+  @override
+  void onChange(Cubit cubit, Change change) {
+    print('${cubit.runtimeType}: $change');
+    super.onChange(cubit, change);
+  }
 }
 
 class ByteBankApp extends StatelessWidget {
@@ -25,12 +34,15 @@ class ByteBankApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    Bloc.observer = LogObserver();
+
     return AppDependencies(
       contactDao: contactDao,
       transactionWebClient: transactionWebClient,
       child: MaterialApp(
         theme: byteBankTheme,
-        home: CounterContainer()
+        home: NameContainer()
         //Dashboard()
       ),
     );

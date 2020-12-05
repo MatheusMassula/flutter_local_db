@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+//Exemplo de contador utilizando Bloc pattern
 class CounterCubit extends Cubit<int> {
   CounterCubit() : super(0);
 
@@ -25,7 +26,7 @@ class CounterView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contador com bloc'),
+        title: const Text('Counter with Bloc'),
       ),
       body: Center(
         child: BlocBuilder<CounterCubit, int>(
