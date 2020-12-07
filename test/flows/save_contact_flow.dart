@@ -22,7 +22,7 @@ void main() {
   testWidgets('Should save a contact', (tester) async {
     await tester.pumpWidget(ByteBankApp(contactDao: mockContactDao, transactionWebClient: mockTransactionWebClient));
 
-    final dashboard = find.byType(Dashboard);
+    final dashboard = find.byType(DashboardView);
     expect(dashboard, findsOneWidget);
 
     await tapOnTransferItem(tester);

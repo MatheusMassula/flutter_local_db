@@ -29,7 +29,7 @@ void main() {
       transactionWebClient: mockTransactionWebClient
     ));
 
-    final dashboard = find.byType(Dashboard);
+    final dashboard = find.byType(DashboardView);
     expect(dashboard, findsOneWidget);
 
     final contactMock = Contact(0, 'Full name', 1000);
