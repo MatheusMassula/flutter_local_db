@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-class NameCubit extends Cubit<String>{
-  NameCubit(String name) : super(name);
-
-  void change(String name) => emit(name);
-}
+import 'package:flutter_local_db/models/state/name.dart';
 
 class NameContainer extends StatelessWidget {
   @override

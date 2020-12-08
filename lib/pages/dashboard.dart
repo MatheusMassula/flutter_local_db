@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_db/models/state/name.dart';
 import 'package:flutter_local_db/pages/name.dart';
 import 'package:flutter_local_db/pages/transactions_list.dart';
 import 'package:flutter_local_db/pages/transfer_list.dart';
