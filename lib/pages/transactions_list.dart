@@ -1,4 +1,3 @@
-import 'package:flutter_local_db/services/http/webclients/transaction_web_client.dart';
 import 'package:flutter_local_db/models/transaction.dart';
 import 'package:flutter_local_db/widgets/app_dependencies.dart';
 import 'widgets/progress_indicator_widget.dart';

@@ -49,7 +49,7 @@ class DashboardView extends StatelessWidget {
                         title: 'Transfer',
                         icon: Icons.monetization_on,
                         onTap: () => Navigator.of(blocContext).push(
-                          MaterialPageRoute(builder: (context) => TransferList())
+                          MaterialPageRoute(builder: (context) => TransferListContainer())
                         ),
                       ),
 

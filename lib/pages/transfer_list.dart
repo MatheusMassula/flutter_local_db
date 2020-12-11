@@ -1,58 +1,92 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_db/pages/transaction_form.dart';
 import 'package:flutter_local_db/pages/widgets/contact_tile.dart';
 import 'package:flutter_local_db/pages/contact_form.dart';
 import 'package:flutter_local_db/models/contact.dart';
-import 'package:flutter_local_db/widgets/app_dependencies.dart';
+import 'package:flutter_local_db/services/database/dao/contact_dao.dart';
 import 'widgets/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 
-class TransferList extends StatefulWidget {
-
-  @override
-  _TransferListState createState() => _TransferListState();
+@immutable
+abstract class TransferListState {
+  const TransferListState();
 }
 
-class _TransferListState extends State<TransferList> {
+@immutable
+class LoadingTransferListState extends TransferListState {
+  const LoadingTransferListState();
+}
+
+@immutable
+class LoadedTransferListState extends TransferListState {
+  final List<Contact> contactList;
+  const LoadedTransferListState(this.contactList);
+}
+
+@immutable
+class FatalErrorContactListState extends TransferListState {
+  const FatalErrorContactListState();
+}
+
+@immutable
+class InitContactListState extends TransferListState {
+  const InitContactListState();
+}
+
+class TransferListCubit extends Cubit<TransferListState> {
+  TransferListCubit() : super(InitContactListState());
+
+  void reload(ContactDao contactDao) async {
+    emit(LoadingTransferListState());
+    List<Contact> contactList = await contactDao.getAll();
+    emit(LoadedTransferListState(contactList));
+  }
+}
+
+class TransferListContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dependencies = AppDependencies.of(context);
-    
+    final ContactDao contactDao = ContactDao();
+    return BlocProvider<TransferListCubit>(
+      create: (context) {
+        final cubit = TransferListCubit();
+        cubit.reload(contactDao);
+        return cubit;
+      },
+      child: TransferList(contactDao: contactDao),
+    );
+  }
+}
+
+class TransferList extends StatelessWidget {
+  final ContactDao contactDao;
+
+  const TransferList({Key key, this.contactDao}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => _addContact(context),
-          child: Icon(Icons.add),
-        ),
-        appBar: AppBar(
-          title: Text('Transfer'),
-        ),
-        body: FutureBuilder(
-          initialData: List(),
-          future: dependencies.contactDao.getAll(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.done:
-                final List<Contact> contactList = snapshot.data;
-                return _buildcontactList(contactList);
-                break;
-
-              case ConnectionState.waiting:
-                return ProgressIndicatorWidget();
-                break;
-
-              case ConnectionState.none:
-                return Container();
-                break;
-
-              case ConnectionState.active:
-                return Container();
-                break;
-
-              default:
-                return Container();
-            }
-          },
-        ));
+      appBar: AppBar(
+        title: Text('Transfer'),
+      ),
+      body: BlocBuilder<TransferListCubit, TransferListState>(
+        builder: (BuildContext context, TransferListState state) {
+          if(state is InitContactListState || state is LoadingTransferListState) {
+            return ProgressIndicatorWidget();
+          }
+          if(state is LoadedTransferListState) {
+            return _buildcontactList(state.contactList);
+          }
+          return const Text('Unknown error');
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _addContact(context),
+        child: Icon(Icons.add),
+      ),
+    );
+        
   }
 
   Widget _buildcontactList(List<Contact> contactList) {
@@ -74,15 +108,11 @@ class _TransferListState extends State<TransferList> {
     );
   }
 
-  void _addContact(BuildContext context) {
-    Navigator.of(context).push(
+  void _addContact(BuildContext context) async {
+    await Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => ContactForm())
-    ).then(
-      (value) {
-        setState(() {
-          
-        });
-      }
     );
+
+    context.read<TransferListCubit>().reload(contactDao);
   } 
 }
