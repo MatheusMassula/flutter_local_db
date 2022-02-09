@@ -4,6 +4,7 @@ import 'package:flutter_local_db/models/state/name.dart';
 import 'package:flutter_local_db/pages/name.dart';
 import 'package:flutter_local_db/pages/transactions_list.dart';
 import 'package:flutter_local_db/pages/transfer_list.dart';
+import 'package:flutter_local_db/services/localization/view_i18n.dart';
 import 'widgets/dashboard_card.dart';
 
 class DashboardContainer extends StatelessWidget {
@@ -20,6 +21,8 @@ class DashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final DashboardViewI18N i18n = DashboardViewI18N(context);
+
     final name = context.watch<NameCubit>().state;
 
     return Scaffold(
@@ -46,7 +49,7 @@ class DashboardView extends StatelessWidget {
                   child: Row(
                     children: <Widget>[
                       DashboardCard(
-                        title: 'Transfer',
+                        title: i18n.transfer,
                         icon: Icons.monetization_on,
                         onTap: () => Navigator.of(blocContext).push(
                           MaterialPageRoute(builder: (context) => TransferListContainer())
@@ -54,7 +57,7 @@ class DashboardView extends StatelessWidget {
                       ),
 
                       DashboardCard(
-                        title: 'Transactions',
+                        title: i18n.transactions,
                         icon: Icons.description,
                         onTap: () => Navigator.of(blocContext).push(
                           MaterialPageRoute(builder: (context) => TransactionsList())
@@ -62,7 +65,7 @@ class DashboardView extends StatelessWidget {
                       ),
 
                       DashboardCard(
-                        title: 'Change name',
+                        title: i18n.change_name,
                         icon: Icons.person_outline,
                         onTap: () => Navigator.of(blocContext).push(
                           MaterialPageRoute(builder: (context) => BlocProvider.value(
@@ -81,4 +84,29 @@ class DashboardView extends StatelessWidget {
       ),
     );
   }
+}
+
+class DashboardViewI18N extends ViewI18N {
+  DashboardViewI18N(BuildContext context) : super(context);
+
+  String get transfer => localize(
+    {
+      'pt-br': 'Tranferir',
+      'en': 'Transfer'
+    }
+  );
+
+  String get transactions => localize(
+    {
+      'pt-br': 'Transações',
+      'en': 'Transactions'
+    }
+  );
+
+  String get change_name => localize(
+    {
+      'pt-br': 'Trocar nome',
+      'en': 'Change name'
+    }
+  );
 }

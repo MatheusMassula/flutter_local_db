@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_db/services/database/dao/contact_dao.dart';
 import 'package:flutter_local_db/services/http/webclients/transaction_web_client.dart';
+import 'package:flutter_local_db/services/localization/localization_container.dart';
 import 'package:flutter_local_db/widgets/app_dependencies.dart';
 import 'package:flutter_local_db/widgets/theme.dart';
 import 'pages/dashboard.dart';
@@ -42,7 +43,9 @@ class ByteBankApp extends StatelessWidget {
       transactionWebClient: transactionWebClient,
       child: MaterialApp(
         theme: byteBankTheme,
-        home: DashboardContainer()
+        home: LocalizationContainer(
+          child: DashboardContainer()
+        )
       ),
     );
   }
