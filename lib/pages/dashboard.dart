@@ -65,7 +65,7 @@ class DashboardView extends StatelessWidget {
                       ),
 
                       DashboardCard(
-                        title: i18n.change_name,
+                        title: i18n.changeName,
                         icon: Icons.person_outline,
                         onTap: () => Navigator.of(blocContext).push(
                           MaterialPageRoute(builder: (context) => BlocProvider.value(
@@ -103,7 +103,7 @@ class DashboardViewI18N extends ViewI18N {
     }
   );
 
-  String get change_name => localize(
+  String get changeName => localize(
     {
       'pt-br': 'Trocar nome',
       'en': 'Change name'
