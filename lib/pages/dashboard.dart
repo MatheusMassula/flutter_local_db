@@ -4,7 +4,7 @@ import 'package:flutter_local_db/models/state/name.dart';
 import 'package:flutter_local_db/pages/name.dart';
 import 'package:flutter_local_db/pages/transactions_list.dart';
 import 'package:flutter_local_db/pages/transfer_list.dart';
-import 'package:flutter_local_db/services/localization/view_i18n.dart';
+import 'package:flutter_local_db/services/localization/localization_container.dart';
 import 'widgets/dashboard_card.dart';
 
 class DashboardContainer extends StatelessWidget {
@@ -12,17 +12,19 @@ class DashboardContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => NameCubit('Massula'),
-      child: DashboardView(),
+      child: I18NLoadingContainer(
+        creator: (I18NMessages messages) => DashboardView(i18n: DashboardViewLazyI18N(messages: messages))
+      ),
     );
   }
 }
 
 class DashboardView extends StatelessWidget {
+  final DashboardViewLazyI18N i18n;
 
+  const DashboardView({Key key, this.i18n}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final DashboardViewI18N i18n = DashboardViewI18N(context);
-
     final name = context.watch<NameCubit>().state;
 
     return Scaffold(
@@ -86,27 +88,38 @@ class DashboardView extends StatelessWidget {
   }
 }
 
-class DashboardViewI18N extends ViewI18N {
-  DashboardViewI18N(BuildContext context) : super(context);
+// class DashboardViewI18N extends ViewI18N {
+//   DashboardViewI18N(BuildContext context) : super(context);
 
-  String get transfer => localize(
-    {
-      'pt-br': 'Tranferir',
-      'en': 'Transfer'
-    }
-  );
+//   String get transfer => localize(
+//     {
+//       'pt-br': 'Tranferir',
+//       'en': 'Transfer'
+//     }
+//   );
 
-  String get transactions => localize(
-    {
-      'pt-br': 'Transações',
-      'en': 'Transactions'
-    }
-  );
+//   String get transactions => localize(
+//     {
+//       'pt-br': 'Transações',
+//       'en': 'Transactions'
+//     }
+//   );
 
-  String get changeName => localize(
-    {
-      'pt-br': 'Trocar nome',
-      'en': 'Change name'
-    }
-  );
+//   String get changeName => localize(
+//     {
+//       'pt-br': 'Trocar nome',
+//       'en': 'Change name'
+//     }
+//   );
+// }
+
+class DashboardViewLazyI18N {
+  final I18NMessages messages;
+  DashboardViewLazyI18N({@required this.messages});
+
+  String get transfer => messages.get('transfer');
+
+  String get transactions => messages.get('transactions');
+
+  String get changeName => messages.get('changeName');
 }
