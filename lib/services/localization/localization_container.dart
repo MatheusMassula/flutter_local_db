@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_db/services/http/webclients/i18n_web_client.dart';
 import 'package:flutter_local_db/services/localization/localization_cubit.dart';
 
 class LocalizationContainer extends StatelessWidget {
@@ -23,7 +24,7 @@ class I18NLoadingContainer extends StatelessWidget {
   Widget build(BuildContext context) => BlocProvider(
     create: (context) {
       final cubit = I18NMessagesCubit();
-      cubit.reload();
+      cubit.reload(I18NWebClient());
       return cubit;
     },
     child: I18NLoadingView(creator: this.creator),
@@ -52,17 +53,12 @@ class I18NLoadingView extends StatelessWidget {
 class I18NMessagesCubit extends Cubit<I18NMessagesState> {
   I18NMessagesCubit() : super(InitContactListI18NMessages());
 
-  Future<void> reload() async {
+  Future<void> reload(I18NWebClient i18NWebClient) async {
     try {
       emit(I18NMessagesLoading());
 
-      await Future.delayed(Duration(seconds: 5));
-
-      final I18NMessages messages = I18NMessages({
-        'transfer': 'Tranferir',
-        'transactions': 'Transações',
-        'changeName' : 'Trocar nome'
-      });
+      final translations = await i18NWebClient.getTranlations();
+      final I18NMessages messages = I18NMessages(translations);
 
       emit(LoadedContactListI18NMessages(messages));
     } catch (e) {
@@ -93,7 +89,7 @@ class ErrorContactListI18NMessages extends I18NMessagesState {
 }
 
 class I18NMessages {
-  final Map<String, String> messages;
+  final Map<String, dynamic> messages;
   I18NMessages(this.messages);
 
   String get(String key) {
