@@ -13,6 +13,7 @@ class DashboardContainer extends StatelessWidget {
     return BlocProvider(
       create: (_) => NameCubit('Massula'),
       child: I18NLoadingContainer(
+        viewId: 'dashboard',
         creator: (I18NMessages messages) => DashboardView(i18n: DashboardViewLazyI18N(messages: messages))
       ),
     );

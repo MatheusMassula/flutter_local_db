@@ -18,13 +18,18 @@ typedef Widget I18NWigetCreator(I18NMessages messages);
 
 class I18NLoadingContainer extends StatelessWidget {
   final I18NWigetCreator creator;
-  const I18NLoadingContainer({ Key key, @required this.creator }) : super(key: key);
+  final String viewId;
+  const I18NLoadingContainer({
+    Key key,
+    @required this.viewId,
+    @required this.creator,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => BlocProvider(
     create: (context) {
       final cubit = I18NMessagesCubit();
-      cubit.reload(I18NWebClient());
+      cubit.reload(I18NWebClient(viewId: this.viewId));
       return cubit;
     },
     child: I18NLoadingView(creator: this.creator),
