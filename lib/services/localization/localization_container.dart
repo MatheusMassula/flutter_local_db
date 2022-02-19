@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_db/services/http/webclients/i18n_web_client.dart';
 import 'package:flutter_local_db/services/localization/localization_cubit.dart';
+import 'package:localstorage/localstorage.dart';
 
 class LocalizationContainer extends StatelessWidget {
   final Widget child;
@@ -28,7 +29,7 @@ class I18NLoadingContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(
     create: (context) {
-      final cubit = I18NMessagesCubit();
+      final cubit = I18NMessagesCubit(viewId: this.viewId);
       cubit.reload(I18NWebClient(viewId: this.viewId));
       return cubit;
     },
@@ -56,14 +57,23 @@ class I18NLoadingView extends StatelessWidget {
 }
 
 class I18NMessagesCubit extends Cubit<I18NMessagesState> {
-  I18NMessagesCubit() : super(InitContactListI18NMessages());
+  final LocalStorage storage = LocalStorage('local_unsecure_version_1.json');
+  final String viewId;
+  I18NMessagesCubit({@required this.viewId}) : super(InitContactListI18NMessages());
 
   Future<void> reload(I18NWebClient i18NWebClient) async {
     try {
       emit(I18NMessagesLoading());
 
-      final translations = await i18NWebClient.getTranlations();
-      final I18NMessages messages = I18NMessages(translations);
+      await storage.ready;
+      I18NMessages messages;
+      if (storage.getItem(this.viewId) != null) {
+        messages = I18NMessages(storage.getItem(this.viewId));
+      } else {
+        final translations = await i18NWebClient.getTranlations();
+        storage.setItem(this.viewId, translations);
+        messages = I18NMessages(translations);
+      }
 
       emit(LoadedContactListI18NMessages(messages));
     } catch (e) {
