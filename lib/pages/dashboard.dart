@@ -4,7 +4,8 @@ import 'package:flutter_local_db/models/state/name.dart';
 import 'package:flutter_local_db/pages/name.dart';
 import 'package:flutter_local_db/pages/transactions_list.dart';
 import 'package:flutter_local_db/pages/transfer_list.dart';
-import 'package:flutter_local_db/services/localization/localization_container.dart';
+import 'package:flutter_local_db/services/localization/i18n_loading_container.dart';
+import 'package:flutter_local_db/services/localization/i18n_messages.dart';
 import 'widgets/dashboard_card.dart';
 
 class DashboardContainer extends StatelessWidget {
