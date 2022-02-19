@@ -10,7 +10,7 @@ import 'widgets/dashboard_card.dart';
 class DashboardContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider( // Desvantagem do BlocProvider é que ele fornece um cubit para o context todo, dai caso tenhamos outra tela e o cubit vá no contexto, as traduções não serão pegas por já existir um cubit disso
       create: (_) => NameCubit('Massula'),
       child: I18NLoadingContainer(
         viewId: 'dashboard',
